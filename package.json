@@ -1,0 +1,14 @@
+{
+  "name": "akinator-api",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.48.0",
+    "akinator-client": "^1.2.4",
+    "express": "^4.21.2"
+  }
+}
