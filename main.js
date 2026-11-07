@@ -150,6 +150,45 @@ app.post('/api/cancel', (req, res) => {
 });
 
 // ==========================================
+// GEÇİCİ TEŞHİS ADRESİ (işin bitince bu bloğu sil)
+// ==========================================
+app.get('/debug', async (req, res) => {
+  const host = req.query.host || 'tr.akinator.com';
+  const out = {};
+  const headers = {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+    'accept-language': 'tr-TR,tr;q=0.9'
+  };
+  const probe = async (name, url, init) => {
+    try {
+      const r = await fetch(url, { ...init, headers: { ...headers, ...(init?.headers || {}) }, redirect: 'follow' });
+      const t = await r.text();
+      out[name] = {
+        status: r.status,
+        server: r.headers.get('server'),
+        cfRay: r.headers.get('cf-ray'),
+        cfMitigated: r.headers.get('cf-mitigated'),
+        title: (t.match(/<title>([^<]*)<\/title>/i) || [])[1] || null,
+        length: t.length,
+        cloudflareChallenge: /just a moment|cf-chl|challenge-platform|attention required/i.test(t),
+        hasSession: /session/i.test(t),
+        hasSignature: /signature/i.test(t),
+        snippet: t.slice(0, 400)
+      };
+    } catch (e) {
+      out[name] = { error: e.message };
+    }
+  };
+  await probe('anasayfa_GET', `https://${host}/`);
+  await probe('game_POST', `https://${host}/game`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded', origin: `https://${host}`, referer: `https://${host}/` },
+    body: 'sid=1&cm=false'
+  });
+  res.json(out);
+});
+
+// ==========================================
 // 6. TEMİZLİK + BAŞLAT
 // ==========================================
 process.on('unhandledRejection', (e) => console.error('unhandledRejection:', e));
