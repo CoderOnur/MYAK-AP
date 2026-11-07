@@ -1,6 +1,6 @@
 {
   "name": "akinator-api",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "private": true,
   "engines": { "node": ">=18" },
@@ -9,6 +9,10 @@
   },
   "dependencies": {
     "express": "^4.21.2",
-    "silent-akinator-pro": "^4.0.3"
+    "silent-akinator-pro": "^4.0.3",
+    "undici": "^6.21.0"
+  },
+  "overrides": {
+    "undici": "^6.21.0"
   }
 }
