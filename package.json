@@ -1,6 +1,6 @@
 {
   "name": "akinator-api",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "private": true,
   "engines": { "node": ">=18" },
@@ -13,6 +13,9 @@
     "undici": "^6.21.0"
   },
   "overrides": {
+    "undici": "^6.21.0"
+  },
+  "resolutions": {
     "undici": "^6.21.0"
   }
 }
